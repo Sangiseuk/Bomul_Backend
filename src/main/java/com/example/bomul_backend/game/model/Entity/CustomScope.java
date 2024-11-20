@@ -1,8 +1,10 @@
 package com.example.bomul_backend.game.model.Entity;
 
+import java.util.List;
+
 import com.example.bomul_backend.common.Position;
 
-public class CircleScope extends Scope {
-	private Position centerPosition;
-	private double radius;
+public class CustomScope extends Scope {
+	List<Position> customPoint;
+
 }
