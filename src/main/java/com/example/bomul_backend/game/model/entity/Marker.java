@@ -1,9 +1,11 @@
-package com.example.bomul_backend.game.model.Entity;
+package com.example.bomul_backend.game.model.entity;
 
 import java.time.LocalDateTime;
 
 import com.example.bomul_backend.common.Position;
+import lombok.Getter;
 
+@Getter
 public class Marker {
 	public enum MarkerType {
 		TARGET, EVENT;
