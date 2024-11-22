@@ -3,5 +3,6 @@ package com.example.bomul_backend.operator.service;
 import com.example.bomul_backend.operator.model.Entity.Operator;
 
 public interface OperatorService {
-    int signup(Operator operator);
+     public int signup(Operator operator);
+     public Operator login(String email, String password);
 }

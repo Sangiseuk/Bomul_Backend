@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import com.example.bomul_backend.common.Position;
 
-public class Marker {
+public class MarkerTemplete {
 	public enum MarkerType {
 		TARGET, EVENT;
 

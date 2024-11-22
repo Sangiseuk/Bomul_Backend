@@ -34,17 +34,17 @@ dependencies {
 	// Spring Boot Web 의존성
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
-	// MyBatis 의존성
-	implementation 'org.mybatis:mybatis:3.5.10'
-
 	// MyBatis Spring 통합 의존성
-	implementation 'org.mybatis:mybatis-spring:2.0.6'
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
 
 	// 데이터베이스 연결
 	implementation 'mysql:mysql-connector-java:8.0.28'
 
 	// Spring Boot DataSource 자동 설정
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+
+	// Swagger OpenAPI 3.x
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 }
 
 tasks.named('test') {
