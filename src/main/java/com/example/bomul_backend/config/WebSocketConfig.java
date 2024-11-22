@@ -11,12 +11,12 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	@Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/topic"); // Simple Broker 설정
+        registry.enableSimpleBroker("/operator", "/participant", "/broadCast"); // Simple Broker 설정
         registry.setApplicationDestinationPrefixes("/app"); // 애플리케이션 prefix 설정
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/game").withSockJS(); // WebSocket 엔드포인트 설정
+        registry.addEndpoint("/game").setAllowedOrigins("http://127.0.0.1:5173").withSockJS(); // WebSocket 엔드포인트 설정
     }
 }
