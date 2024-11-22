@@ -1,22 +1,29 @@
-package com.example.bomul_backend.game.model.entity;
+package com.example.bomul_backend.game.model.pojo;
+
 
 import com.example.bomul_backend.common.Position;
-import com.example.bomul_backend.game.model.pojo.Marker.MarkerType;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
+@Builder
+@RequiredArgsConstructor
 @Getter
-public class MarkerTemplate {
-	@Setter
-	private int markerId;
+public class Marker {
+	public enum MarkerType {
+		TARGET, EVENT;
 
-	@Setter
-	private int mapId;
+		public MarkerType getByIndex(int index) {
+			try {
+				return MarkerType.values()[index];
+			} catch (ArrayIndexOutOfBoundsException e) {
+				throw new IllegalArgumentException("Invalid MarkerType Index : " + index);
+			}
+		}
+	}
 
-	@Setter
-	private MarkerType type;
+	private final MarkerType type;
 
 	@Setter
 	private Position position;
@@ -27,12 +34,6 @@ public class MarkerTemplate {
 	private int viewCount;
 	private String contentText;
 	private String contentImgUrl;
-
-	@Setter
-	private LocalDateTime createdAt;
-
-	@Setter
-	private LocalDateTime updatedAt;
 
 	public void setViewCount(int viewCount) throws IllegalArgumentException {
 		if(viewCount <= 0) {
