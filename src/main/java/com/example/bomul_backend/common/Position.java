@@ -1,5 +1,9 @@
 package com.example.bomul_backend.common;
 
+import lombok.Getter;
+
+@Getter
+
 public class Position {
 	double latitude;
 	double longitude;
@@ -18,6 +22,27 @@ public class Position {
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}
-	
-	
+
+	public void setLatitude(double latitude) {
+		if(latitude < -90.0) {
+			this.latitude = 0.0;
+			return;
+		}
+		if(latitude > 90.0){
+			this.latitude = 90.0;
+			return;
+		}
+		this.latitude = latitude;
+	}
+
+	public void setLongitude(double longitude) {
+		if(longitude < -180.0 || longitude > 180.0) {
+			this.longitude = -180.0;
+		}
+		if(longitude < -180.0 || longitude > 180.0) {
+			this.longitude = 180.0;
+		}
+
+		this.longitude = longitude;
+	}
 }
