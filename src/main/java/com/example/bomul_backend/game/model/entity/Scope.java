@@ -2,7 +2,10 @@ package com.example.bomul_backend.game.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -17,7 +20,10 @@ import java.time.LocalDateTime;
 		@JsonSubTypes.Type(value = CustomScope.class, name="custom")
 })
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
+@Setter
 public class Scope {
 	public enum ScopeType {
 	    CIRCLE,
