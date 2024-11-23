@@ -1,15 +1,25 @@
 package com.example.bomul_backend.game.controller;
 
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
+import com.example.bomul_backend.game.model.dto.CreateGameDto;
+import com.example.bomul_backend.game.model.dto.CreateGameResponseDto;
+import com.example.bomul_backend.game.service.GameService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class GameOperatorController {
-    @MessageMapping("/{gameCode}/create")
-    @SendTo("/operator/{gameCode}/create")
-    public String createGame(@DestinationVariable String gameCode, String message) {
-        return "";
+    GameService gameService;
+
+    @Autowired
+    public GameOperatorController(GameService gameService) {
+        this.gameService = gameService;
+    }
+
+    @PostMapping("/create-game")
+    public ResponseEntity<CreateGameResponseDto> createGame(@RequestBody CreateGameDto createGameDto) {
+        return gameService.createGame(createGameDto);
     }
 }
