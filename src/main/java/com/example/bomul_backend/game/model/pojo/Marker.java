@@ -2,12 +2,10 @@ package com.example.bomul_backend.game.model.pojo;
 
 
 import com.example.bomul_backend.common.Position;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-@Builder
 @RequiredArgsConstructor
 @Getter
 public class Marker {

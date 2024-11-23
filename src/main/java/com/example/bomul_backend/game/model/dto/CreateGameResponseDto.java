@@ -1,8 +1,5 @@
 package com.example.bomul_backend.game.model.dto;
 
-import lombok.Getter;
-
-@Getter
 public record CreateGameResponseDto(String gameCode) {
     public CreateGameResponseDto {
         if (gameCode.length() > 6)
