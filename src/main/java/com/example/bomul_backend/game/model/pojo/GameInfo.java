@@ -51,7 +51,7 @@ public class GameInfo {
         return feedBackLevel;
     }
 
-    public boolean findMarker(Position locationData) {
+    public Marker findMarker(Position locationData) {
         Marker nearMarker = getNearestMarker(locationData);
 
         assert nearMarker != null; //절대 null이면 안됨
@@ -61,10 +61,10 @@ public class GameInfo {
         int feedBackLevel = nearMarkerLevel < maxFeedbackLevel ? nearMarkerLevel : -1;
         if(feedBackLevel == 0) {
             nearMarker.setViewCount(nearMarker.getViewCount() - 1);
-            return true;
+            return nearMarker;
         }
         else {
-            return false;
+            return null;
         }
     }
 }
