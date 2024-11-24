@@ -59,7 +59,7 @@ public class GameServiceImpl implements GameService {
     private void sendFeedBackLevel(String sessionId, String gameCode, Position locationData) {
         GameInfo gameInfo = gameSessionData.get(gameCode); // 추후 기능 분리를 고려해 해당 Line 사용
         if(gameInfo == null)
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         int feedBackLevel = gameInfo.getFeedBackLevel(locationData);
         if(feedBackLevel == -1)
             return;
