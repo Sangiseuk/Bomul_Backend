@@ -75,4 +75,22 @@ public class GameServiceImpl implements GameService {
         sendFeedBackLevel(sessionId, gameCode, locationData);
         return locationData;
     }
+
+    @Override
+    public void findMarker(String sessionId, String gameCode, Position locationData) {
+        GameInfo gameInfo = gameSessionData.get(gameCode); // 추후 기능 분리를 고려해 해당 Line 사용
+        if(gameInfo == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+        String broadCastDestination = new StringBuilder().append("/broadCast/").append(gameCode).append("/marker-update").toString();
+        String returnDestination = new StringBuilder().append("/participant/").append(gameCode).append("/find-marker").toString();
+
+        if(gameInfo.findMarker(locationData)) {
+            messagingTemplate.convertAndSendToUser(sessionId, returnDestination, true);
+            messagingTemplate.convertAndSend(broadCastDestination, gameInfo.getMarkerList());
+        }
+        else {
+            messagingTemplate.convertAndSendToUser(sessionId, returnDestination, false);
+        }
+    }
 }

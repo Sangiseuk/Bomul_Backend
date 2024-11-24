@@ -25,5 +25,8 @@ public class GameParticipantController {
         return gameService.sendLocation(headerAccessor.getSessionId(), gameCode, locationData); // 클라이언트로 반환
     }
 
-
+    @MessageMapping("{gameCode}/find-marker") // 클라이언트에서 보내는 메시지의 경로
+    public void findMarker(SimpMessageHeaderAccessor headerAccessor, @PathVariable String gameCode, Position locationData) {
+        gameService.findMarker(headerAccessor.getSessionId(), gameCode, locationData);
+    }
 }
