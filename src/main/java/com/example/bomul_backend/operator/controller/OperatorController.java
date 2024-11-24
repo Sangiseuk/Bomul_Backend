@@ -17,11 +17,14 @@ public class OperatorController {
 		this.operatorService = operatorService;
 	}
 
-	// 회원가입
 	@PostMapping("sign-up")
 	public ResponseEntity<String> signup(@RequestBody Operator operator) {
-		operatorService.signup(operator);
-		return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
+		try {
+			operatorService.signup(operator);
+			return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body("Failed to register user: " + e.getMessage());
+		}
 	}
-
 }

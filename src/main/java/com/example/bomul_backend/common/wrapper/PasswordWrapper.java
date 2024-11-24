@@ -11,6 +11,9 @@ public class PasswordWrapper {
     String salt;
 
     public String encryptPassword(){
+        if (password == null || salt == null) {
+            throw new IllegalArgumentException("Password or salt cannot be null");
+        }
         byte[] hashingPassword = CryptoUtils.getSHA256(password, salt);
         return CryptoUtils.byteArrayToHex(hashingPassword);
     }

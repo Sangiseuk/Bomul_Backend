@@ -4,6 +4,7 @@ import com.example.bomul_backend.common.wrapper.PasswordWrapper;
 import com.example.bomul_backend.operator.model.Dao.OperatorDao;
 import com.example.bomul_backend.operator.model.Entity.Operator;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +19,7 @@ public class OperatorServiceImpl implements OperatorService {
         this.operatorDao = operatorDao;
     }
 
+    @Transactional
     @Override
     public int signup(Operator operator) {
         String salt = generateSalt();
@@ -25,12 +27,15 @@ public class OperatorServiceImpl implements OperatorService {
         passwordWrapper.setSalt(salt);
 
         String encryptedPassword = passwordWrapper.encryptPassword();
-
         passwordWrapper.setPassword(encryptedPassword);
-
         operator.setPassword(passwordWrapper);
 
-        return operatorDao.insertOperator(operator);
+        operatorDao.insertOperator(operator);
+
+        Map<String, String> saltInfo = new HashMap<>();
+        saltInfo.put("operatorId", String.valueOf(operator.getOperatorId()));
+        saltInfo.put("salt", salt);
+        return operatorDao.insertSalt(saltInfo);
     }
 
     @Override
@@ -46,8 +51,7 @@ public class OperatorServiceImpl implements OperatorService {
         info.put("email", email);
         info.put("password", encryptedPassword);
 
-        Operator tmp =operatorDao.selectOperator(info);
-        return tmp;
+        return operatorDao.selectOperator(info);
     }
 
     private String generateSalt() {

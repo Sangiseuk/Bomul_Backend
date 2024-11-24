@@ -8,6 +8,8 @@ import java.util.Map;
 @Mapper
 public interface OperatorDao {
     int insertOperator(Operator operator);
+    int insertSalt(Map<String, String> info);
     String selectSalt(String email);
     Operator selectOperator(Map<String, String> info);
+
 }

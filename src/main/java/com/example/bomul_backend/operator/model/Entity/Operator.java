@@ -13,14 +13,23 @@ public class Operator {
     private String nickname;
     private String email;
     private PasswordWrapper password;
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
-    public Operator(int operatorId, String nickname, String email, PasswordWrapper password, LocalDateTime createAt) {
+    public Operator() {}
+
+    public Operator(int operatorId, String nickname, String email, PasswordWrapper password, LocalDateTime createdAt) {
         this.operatorId = operatorId;
         this.nickname = nickname;
         this.email = email;
         this.password = password;
-        this.createAt = createAt;
+        this.createdAt = createdAt;
+    }
+
+    public Operator(String nickname, String email, PasswordWrapper password, LocalDateTime createdAt) {
+        this.nickname = nickname;
+        this.email = email;
+        this.password = password;
+        this.createdAt = createdAt;
     }
 
     public Operator(String email, PasswordWrapper password) {
