@@ -1,11 +1,14 @@
 package com.example.bomul_backend.game.service;
 
+import com.example.bomul_backend.common.Position;
 import com.example.bomul_backend.game.model.dto.CreateGameDto;
 import com.example.bomul_backend.game.model.dto.CreateGameResponseDto;
 import com.example.bomul_backend.game.model.pojo.GameInfo;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -15,10 +18,13 @@ import java.util.UUID;
 @Service
 public class GameServiceImpl implements GameService {
     private final HttpSession httpSession;
+    private final SimpMessagingTemplate messagingTemplate;
     Map<String, GameInfo> gameSessionData;
 
-    public GameServiceImpl(HttpSession httpSession) {
+    @Autowired
+    public GameServiceImpl(HttpSession httpSession, SimpMessagingTemplate messagingTemplate) {
         this.httpSession = httpSession;
+        this.messagingTemplate = messagingTemplate;
     }
 
     @Override
@@ -48,5 +54,25 @@ public class GameServiceImpl implements GameService {
         } catch (ResponseStatusException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private void sendFeedBackLevel(String sessionId, String gameCode, Position locationData) {
+        GameInfo gameInfo = gameSessionData.get(gameCode); // 추후 기능 분리를 고려해 해당 Line 사용
+        if(gameInfo == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        int feedBackLevel = gameInfo.getFeedBackLevel(locationData);
+        if(feedBackLevel == -1)
+            return;
+
+        StringBuilder destStringBuilder = new StringBuilder();
+        destStringBuilder.append("/participant/").append(gameCode).append("/feedback");
+        String destination = destStringBuilder.toString();
+        messagingTemplate.convertAndSendToUser(sessionId, destination, feedBackLevel);
+    }
+
+    @Override
+    public Position sendLocation(String sessionId, String gameCode, Position locationData) {
+        sendFeedBackLevel(sessionId, gameCode, locationData);
+        return locationData;
     }
 }
