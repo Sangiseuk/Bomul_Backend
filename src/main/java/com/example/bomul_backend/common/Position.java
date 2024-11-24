@@ -45,4 +45,21 @@ public class Position {
 
 		this.longitude = longitude;
 	}
+
+	public Position add(Position position) {
+		return new Position(this.latitude + position.latitude, this.longitude + position.longitude);
+	}
+
+	public Position diff(Position position) {
+		return new Position(position.getLatitude() - this.latitude, position.getLongitude() - this.longitude);
+	}
+
+	public double dot(Position position) {
+		return position.getLatitude() * this.latitude + position.getLongitude() * this.longitude;
+	}
+
+	public double getDistance(Position position) {
+		Position diffPosition = this.diff(position);
+		return Math.sqrt(diffPosition.dot(diffPosition));
+	}
 }
