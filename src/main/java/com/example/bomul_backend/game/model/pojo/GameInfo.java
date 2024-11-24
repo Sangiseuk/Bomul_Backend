@@ -20,6 +20,18 @@ public class GameInfo {
     private final int maxFeedbackLevel;
     private List<Marker> markerList;
 
+    private Marker getNearestMarker(Position locationData) {
+        Marker nearMarker = null;
+        double minDistance = Double.MAX_VALUE;
+        for (Marker marker : markerList) {
+            double distance = marker.getPosition().getDistance(locationData);
+            if (minDistance > distance) {
+                minDistance = distance;
+                nearMarker = marker;
+            }
+        }
+        return nearMarker;
+    }
     /**
      * 현재 locationData와 가장 인접한 Marker의 햅틱 피드백 레벨을 반환
      *
@@ -28,15 +40,31 @@ public class GameInfo {
      */
     public int getFeedBackLevel(Position locationData) {
         int feedBackLevel = -1;
-        double minDistance = Double.MAX_VALUE;
-        for (Marker marker : markerList) {
-            double distance = marker.getPosition().getDistance(locationData);
-            if (minDistance > distance) {
-                minDistance = distance;
-                int currLevel = (int) (distance / feedbackRange);
-                feedBackLevel = currLevel < maxFeedbackLevel ? currLevel : feedBackLevel;
-            }
-        }
+        Marker nearMarker = getNearestMarker(locationData);
+
+        assert nearMarker != null; // 절대 null이면 안됨
+
+        double distance = nearMarker.getPosition().getDistance(locationData);
+        int nearMarkerLevel = (int) (distance / feedbackRange);
+        feedBackLevel = nearMarkerLevel < maxFeedbackLevel ? nearMarkerLevel : -1;
+
         return feedBackLevel;
+    }
+
+    public boolean findMarker(Position locationData) {
+        Marker nearMarker = getNearestMarker(locationData);
+
+        assert nearMarker != null; //절대 null이면 안됨
+
+        double distance = nearMarker.getPosition().getDistance(locationData);
+        int nearMarkerLevel = (int) (distance / feedbackRange);
+        int feedBackLevel = nearMarkerLevel < maxFeedbackLevel ? nearMarkerLevel : -1;
+        if(feedBackLevel == 0) {
+            nearMarker.setViewCount(nearMarker.getViewCount() - 1);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

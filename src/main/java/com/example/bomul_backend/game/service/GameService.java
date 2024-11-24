@@ -9,4 +9,6 @@ public interface GameService {
     ResponseEntity<CreateGameResponseDto> createGame(CreateGameDto createGameDto);
 
     Position sendLocation(String sessionId, String gameCode, Position locationData);
+
+    void findMarker(String sessionId, String gameCode, Position locationData);
 }
