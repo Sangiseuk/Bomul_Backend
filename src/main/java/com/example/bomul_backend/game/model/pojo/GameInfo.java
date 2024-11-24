@@ -24,7 +24,7 @@ public class GameInfo {
      * 현재 locationData와 가장 인접한 Marker의 햅틱 피드백 레벨을 반환
      *
      * @param locationData 계산 기준이 되는 location
-     * @return 햅틱 피드백 레벨
+     * @return 햅틱 피드백 레벨 (인접한 마커가 없을 시, -1)
      */
     public int getFeedBackLevel(Position locationData) {
         int feedBackLevel = -1;
