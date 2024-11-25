@@ -1,7 +1,7 @@
 package com.example.bomul_backend.operator.service;
 
 import com.example.bomul_backend.common.wrapper.PasswordWrapper;
-import com.example.bomul_backend.operator.model.Entity.Operator;
+import com.example.bomul_backend.operator.model.entity.Operator;
 
 public interface OperatorService {
      public int signup(Operator operator);

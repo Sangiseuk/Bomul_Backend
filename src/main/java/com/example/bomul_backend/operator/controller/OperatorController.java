@@ -1,6 +1,6 @@
 package com.example.bomul_backend.operator.controller;
 
-import com.example.bomul_backend.operator.model.Entity.Operator;
+import com.example.bomul_backend.operator.model.entity.Operator;
 import jakarta.servlet.http.HttpSession;
 import org.springdoc.core.service.RequestBodyService;
 import org.springframework.beans.factory.annotation.Autowired;

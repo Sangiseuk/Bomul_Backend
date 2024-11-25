@@ -2,12 +2,16 @@ package com.example.bomul_backend.game.model.entity;
 
 import com.example.bomul_backend.common.Position;
 import com.example.bomul_backend.game.model.pojo.Marker.MarkerType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Builder
+@AllArgsConstructor
 public class MarkerTemplate {
 	@Setter
 	private int markerId;

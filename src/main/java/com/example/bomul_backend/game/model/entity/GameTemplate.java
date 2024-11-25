@@ -1,5 +1,7 @@
 package com.example.bomul_backend.game.model.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +10,8 @@ import java.util.List;
 
 @Setter
 @Getter
+@Builder
+@AllArgsConstructor
 public class GameTemplate {
     private int mapId;
     private int operatorId;
@@ -19,6 +23,4 @@ public class GameTemplate {
     private List<MarkerTemplate> markers;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
-
 }

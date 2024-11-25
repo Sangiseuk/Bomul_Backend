@@ -5,7 +5,22 @@
 
     <insert id="insertScope" useGeneratedKeys="true" keyProperty="scopeId">
         INSERT INTO Scope (scope_type, created_at)
-        VALUES (#{}, NOW());
+        VALUES (#{scopeType, typeHandler=com.example.bomul_backend.game.model.typehandler.ScopeTypeHandler}, NOW());
+    </insert>
+
+    <insert id="insertCircleScope">
+        INSERT INTO CircleScope (scope_id, center_lat, center_lon, radius)
+        VALUES (#{scopeId}, #{centerPosition.latitude}, #{centerPosition.longitude}, #{radius})
+    </insert>
+
+    <insert id="insertRectangleScope">
+        INSERT INTO RectangleScope (scope_id, top_left_lat, top_left_lon, bottom_right_lat, bottom_right_lon)
+        VALUES (#{scopeId}, #{topLeftPosition.latitude}, #{topLeftPosition.longitude}, #{bottomRightPosition.latitude}, #{bottomRightPosition.longitude})
+    </insert>
+
+    <insert id="insertCustomScope">
+        INSERT INTO CustomScope (scope_id, custom_point)
+        VALUES (#{scopeId}, #{customPoint, jdbcType=VARCHAR})
     </insert>
 
     <insert id="insertGameTemplate" useGeneratedKeys="true" keyProperty="mapId">
@@ -38,7 +53,7 @@
         ) )
         VALUES (
             #{mapId},
-            #{type},
+            #{type.ordinal},
             #{position.latitude},
             #{position.longitude},
             #{isVisible},

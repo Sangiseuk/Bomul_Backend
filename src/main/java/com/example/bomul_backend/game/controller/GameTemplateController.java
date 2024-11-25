@@ -1,6 +1,6 @@
 package com.example.bomul_backend.game.controller;
 
-import com.example.bomul_backend.game.model.Dto.GameTemplateRequest;
+import com.example.bomul_backend.game.model.dto.GameTemplateRequest;
 import com.example.bomul_backend.game.service.GameTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

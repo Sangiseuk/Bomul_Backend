@@ -4,9 +4,8 @@ import com.example.bomul_backend.common.Position;
 import com.example.bomul_backend.game.model.dao.GameTemplateDao;
 import com.example.bomul_backend.game.model.dto.GameTemplateRequest;
 import com.example.bomul_backend.game.model.dto.MarkerRequest;
-import com.example.bomul_backend.game.model.entity.GameTemplate;
-import com.example.bomul_backend.game.model.entity.MarkerTemplate;
-import com.example.bomul_backend.game.model.entity.Scope;
+import com.example.bomul_backend.game.model.entity.*;
+import com.example.bomul_backend.game.model.pojo.Marker;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,49 +24,87 @@ public class GameTemplateServiceImpl implements GameTemplateService {
     @Override
     public int createGameTemplate(GameTemplateRequest request) {
         // 1. Scope
-        Scope scope = new Scope();
-        scope.setScopeType(Scope.ScopeType.values()[request.getScopeType()]);
-        scope.setCreatedAt(LocalDateTime.now());
+        Scope scope = Scope.builder()
+                .scopeType(Scope.ScopeType.values()[request.getScopeType()])
+                .createdAt(LocalDateTime.now())
+                .build();
         gameTemplateDao.insertScope(scope);
 
-        // GameTemplete 생성
-        GameTemplate gameTemplate = new GameTemplate();
-        gameTemplate.setOperatorId(request.getHostId());
-        gameTemplate.setScopeId(request.getScopeId());
-        gameTemplate.setMaxParticipants(request.getMaxParticipants());
-        gameTemplate.setAnnouncementText(request.getAnnouncementText());
-        gameTemplate.setFeedbackRange(request.getFeedbackRange());
-        gameTemplate.setMaxFeedbackLevel(request.getMaxFeedbackLevel());
-        gameTemplate.setCreatedAt(LocalDateTime.now());
+        int scopeId = scope.getScopeId();
 
-        // GameTemplete 저장
-        int result =  gameTemplateDao.insertGameTemplate(gameTemplate);
+        // Scope Type 별 저장
+        switch(scope.getScopeType()){
+            case CIRCLE -> {
+                CircleScope circleScope = CircleScope.builder()
+                        .scopeId(scopeId)
+                        .centerPosition(new Position(
+                                request.getCircleScope().getCenterPosition().getLatitude(),
+                                request.getCircleScope().getCenterPosition().getLongitude()))
+                        .radius(request.getCircleScope().getRadius())
+                        .build();
+
+            }
+            case RECTANGLE -> {
+                RectangleScope rectangleScope = RectangleScope.builder()
+                        .scopeId(scopeId)
+                        .topLeftPosition(new Position(
+                                request.getRectangleScope().getTopLeftPosition().getLatitude(),
+                                request.getRectangleScope().getTopLeftPosition().getLongitude()))
+                        .bottomRightPosition(new Position(
+                                request.getRectangleScope().getBottomRightPosition().getLatitude(),
+                                request.getRectangleScope().getBottomRightPosition().getLongitude()))
+                        .build();
+                gameTemplateDao.insertRectangleScope(rectangleScope);
+            }
+            case CUSTOM -> {
+                CustomScope customScope = CustomScope.builder()
+                        .scopeId(scopeId)
+                        .customPoint(request.getCustomScope().getCustomPoint())
+                        .build();
+                gameTemplateDao.insertCustomScope(customScope);
+            }
+        }
+
+        // 2. GameTemplete
+        GameTemplate gameTemplate = GameTemplate.builder()
+                .operatorId(request.getHostId())
+                .scopeId(scopeId)
+                .maxParticipants(request.getMaxParticipants())
+                .announcementText(request.getAnnouncementText())
+                .feedbackRange(request.getFeedbackRange())
+                .maxFeedbackLevel(request.getMaxFeedbackLevel())
+                .createdAt(LocalDateTime.now())
+                .build();
+        int result = gameTemplateDao.insertGameTemplate(gameTemplate);
+
         int mapId = gameTemplate.getMapId();
-        // 마커 리스트 저장
+
+        // 3. Marker
         if (request.getMarkers() != null) {
             for (MarkerRequest markerRequest : request.getMarkers()) {
-                MarkerTemplate marker = new MarkerTemplate();
-                marker.setMapId(mapId);
-                marker.setType(MarkerTemplate.MarkerType.values()[markerRequest.getType()]);
-                marker.setPosition(new Position(markerRequest.getLatitude(), markerRequest.getLongitude()));
-                marker.setVisible(markerRequest.isVisible());
-                marker.setViewCount(markerRequest.getViewCount());
-                marker.setContentText(markerRequest.getContentText());
-                marker.setContentImgUrl(markerRequest.getContentImgUrl());
-                marker.setCreatedAt(LocalDateTime.now());
-                marker.setUpdatedAt(LocalDateTime.now());
+                MarkerTemplate marker = MarkerTemplate.builder()
+                        .mapId(mapId)
+                        .type(Marker.MarkerType.values()[markerRequest.getType()])
+                        .position(new Position(
+                                markerRequest.getPosition().getLatitude(),
+                                markerRequest.getPosition().getLongitude()))
+                        .isVisible(markerRequest.isVisible())
+                        .viewCount(markerRequest.getViewCount())
+                        .contentText(markerRequest.getContentText())
+                        .contentImgUrl(markerRequest.getContentImgUrl())
+                        .createdAt(LocalDateTime.now())
+                        .updatedAt(LocalDateTime.now())
+                        .build();
 
                 gameTemplateDao.insertMarker(marker);
             }
         }
-
         return result;
     }
 
     @Override
     public int updateGameTemplate(int templateId, GameTemplateRequest request) {
         GameTemplate gameTemplate = getGameTemplate(templateId);
-        // 업데이트 로직
         gameTemplate.setMaxParticipants(request.getMaxParticipants());
         gameTemplate.setAnnouncementText(request.getAnnouncementText());
         gameTemplate.setFeedbackRange(request.getFeedbackRange());

@@ -4,8 +4,11 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+
 @JsonTypeInfo(
 		use = JsonTypeInfo.Id.NAME,
 		include = JsonTypeInfo.As.PROPERTY,
@@ -19,13 +22,35 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@SuperBuilder
+@AllArgsConstructor
 public class Scope {
 	public enum ScopeType {
-	    CIRCLE,
-	    RECTANGLE,
-	    CUSTOM;
+	    CIRCLE(0),
+	    RECTANGLE(1),
+	    CUSTOM(2);
+		int value;
+		ScopeType(int value) {
+			this.value = value;
+		}
 
-	    public ScopeType getByIndex(int index) {
+		public int getValue() {
+			return value;
+		}
+
+		public static ScopeType fromValue(int value){
+			for (ScopeType type : ScopeType.values()) {
+				if(type.getValue() == value){
+					return type;
+				}
+			}
+			throw new IllegalArgumentException("Invalid scope type : " + value);
+		}
+
+
+
+
+		public ScopeType getByIndex(int index) {
 	    	try {
 	    		return ScopeType.values()[index];
 	    	} catch (ArrayIndexOutOfBoundsException e) {

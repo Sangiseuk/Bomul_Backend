@@ -1,6 +1,6 @@
-package com.example.bomul_backend.game.model.Dao;
+package com.example.bomul_backend.game.model.dao;
 
-import com.example.bomul_backend.game.model.Entity.GameTemplate;
+import com.example.bomul_backend.game.model.entity.GameTemplate;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
