@@ -6,6 +6,7 @@ import com.example.bomul_backend.game.model.dto.GameTemplateRequest;
 import com.example.bomul_backend.game.model.dto.MarkerRequest;
 import com.example.bomul_backend.game.model.entity.*;
 import com.example.bomul_backend.game.model.pojo.Marker;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ public class GameTemplateServiceImpl implements GameTemplateService {
 
     private final GameTemplateDao gameTemplateDao;
 
+    @Autowired
     public GameTemplateServiceImpl(GameTemplateDao gameTemplateDao) {
         this.gameTemplateDao = gameTemplateDao;
     }
@@ -24,47 +26,9 @@ public class GameTemplateServiceImpl implements GameTemplateService {
     @Override
     public int createGameTemplate(GameTemplateRequest request) {
         // 1. Scope
-        Scope scope = Scope.builder()
-                .scopeType(Scope.ScopeType.values()[request.getScopeType()])
-                .createdAt(LocalDateTime.now())
-                .build();
-        gameTemplateDao.insertScope(scope);
+        gameTemplateDao.insertScope(request.getScope());
 
-        int scopeId = scope.getScopeId();
-
-        // Scope Type 별 저장
-        switch(scope.getScopeType()){
-            case CIRCLE -> {
-                CircleScope circleScope = CircleScope.builder()
-                        .scopeId(scopeId)
-                        .centerPosition(new Position(
-                                request.getCircleScope().getCenterPosition().getLatitude(),
-                                request.getCircleScope().getCenterPosition().getLongitude()))
-                        .radius(request.getCircleScope().getRadius())
-                        .build();
-
-            }
-            case RECTANGLE -> {
-                RectangleScope rectangleScope = RectangleScope.builder()
-                        .scopeId(scopeId)
-                        .topLeftPosition(new Position(
-                                request.getRectangleScope().getTopLeftPosition().getLatitude(),
-                                request.getRectangleScope().getTopLeftPosition().getLongitude()))
-                        .bottomRightPosition(new Position(
-                                request.getRectangleScope().getBottomRightPosition().getLatitude(),
-                                request.getRectangleScope().getBottomRightPosition().getLongitude()))
-                        .build();
-                gameTemplateDao.insertRectangleScope(rectangleScope);
-            }
-            case CUSTOM -> {
-                CustomScope customScope = CustomScope.builder()
-                        .scopeId(scopeId)
-                        .customPoint(request.getCustomScope().getCustomPoint())
-                        .build();
-                gameTemplateDao.insertCustomScope(customScope);
-            }
-        }
-
+        int scopeId = request.getScope().getScopeId();
         // 2. GameTemplete
         GameTemplate gameTemplate = GameTemplate.builder()
                 .operatorId(request.getHostId())

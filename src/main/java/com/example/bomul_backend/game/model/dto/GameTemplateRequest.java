@@ -3,6 +3,7 @@ package com.example.bomul_backend.game.model.dto;
 import com.example.bomul_backend.game.model.entity.CircleScope;
 import com.example.bomul_backend.game.model.entity.CustomScope;
 import com.example.bomul_backend.game.model.entity.RectangleScope;
+import com.example.bomul_backend.game.model.entity.Scope;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,10 +13,7 @@ import java.util.List;
 @Setter
 public class GameTemplateRequest {
     private int hostId;
-    private int scopeType; // 0: CIRCLE, 1: RECTANGLE, 2: CUSTOM
-    private CircleScope circleScope; // 원형 스코프
-    private RectangleScope rectangleScope; // 사각형 스코프
-    private CustomScope customScope;
+    private Scope scope; // 원형 스코프
     private int maxParticipants;
     private String announcementText;
     private int feedbackRange; // 200m, 150m, 등

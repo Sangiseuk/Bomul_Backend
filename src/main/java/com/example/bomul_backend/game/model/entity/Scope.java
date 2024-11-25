@@ -1,30 +1,34 @@
 package com.example.bomul_backend.game.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @JsonTypeInfo(
 		use = JsonTypeInfo.Id.NAME,
 		include = JsonTypeInfo.As.PROPERTY,
-		property = "type"
+		property = "scopeType"
 )
 @JsonSubTypes({
-		@JsonSubTypes.Type(value = CircleScope.class, name="circle"),
-		@JsonSubTypes.Type(value = RectangleScope.class, name="rectangle"),
-		@JsonSubTypes.Type(value = CustomScope.class, name="custom")
+		@JsonSubTypes.Type(value = CircleScope.class, name="CIRCLE"),
+		@JsonSubTypes.Type(value = RectangleScope.class, name="RECTANGLE"),
+		@JsonSubTypes.Type(value = CustomScope.class, name="CUSTOM")
 })
 
 @Getter
 @Setter
 @SuperBuilder
+@NoArgsConstructor
 @AllArgsConstructor
-public class Scope {
+public abstract class Scope {
 	public enum ScopeType {
 	    CIRCLE(0),
 	    RECTANGLE(1),
@@ -46,9 +50,6 @@ public class Scope {
 			}
 			throw new IllegalArgumentException("Invalid scope type : " + value);
 		}
-
-
-
 
 		public ScopeType getByIndex(int index) {
 	    	try {

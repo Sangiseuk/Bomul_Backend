@@ -9,10 +9,6 @@ public interface GameTemplateDao {
     int insertGameTemplate(GameTemplate gameTemplate);
     GameTemplate selectGameTemplateById(int mapId);
     int updateGameTemplate(GameTemplate gameTemplate);
-
     int insertScope(Scope scope);
-    int insertCircleScope(CircleScope circleScope);
-    int insertRectangleScope(RectangleScope rectangleScope);
-    int insertCustomScope(CustomScope customScope);
     int insertMarker(MarkerTemplate marker);
 }
