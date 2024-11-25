@@ -4,6 +4,7 @@ import com.example.bomul_backend.common.Position;
 import com.example.bomul_backend.game.model.dto.CreateGameDto;
 import com.example.bomul_backend.game.model.dto.CreateGameResponseDto;
 import com.example.bomul_backend.game.model.pojo.GameInfo;
+import com.example.bomul_backend.game.model.pojo.Marker;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -85,12 +87,13 @@ public class GameServiceImpl implements GameService {
         String broadCastDestination = new StringBuilder().append("/broadCast/").append(gameCode).append("/marker-update").toString();
         String returnDestination = new StringBuilder().append("/participant/").append(gameCode).append("/find-marker").toString();
 
-        if(gameInfo.findMarker(locationData)) {
-            messagingTemplate.convertAndSendToUser(sessionId, returnDestination, true);
+        Marker nearMarker = gameInfo.findMarker(locationData);
+        if(nearMarker != null) {
+            messagingTemplate.convertAndSendToUser(sessionId, returnDestination, nearMarker);
             messagingTemplate.convertAndSend(broadCastDestination, gameInfo.getMarkerList());
         }
         else {
-            messagingTemplate.convertAndSendToUser(sessionId, returnDestination, false);
+            messagingTemplate.convertAndSendToUser(sessionId, returnDestination, Optional.empty());
         }
     }
 }
