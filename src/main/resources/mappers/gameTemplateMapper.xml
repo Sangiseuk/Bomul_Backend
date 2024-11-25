@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.bomul_backend.game.model.Dao.GameTemplateDao">
+
+    <insert id="insertGameTemplate" useGeneratedKeys="true" keyProperty="mapId">
+        INSERT INTO game_template (
+            host_id,
+            scope_id,
+            max_participants,
+            announcement_text,
+            feedback_range,
+            max_feedback_level,
+            created_at,
+            updated_at
+        )
+        VALUES (
+                   #{hostId},
+                   #{scopeId},
+                   #{maxParticipants},
+                   #{announcementText},
+                   #{feedbackRange},
+                   #{maxFeedbackLevel},
+                   NOW(),
+                   NOW()
+               )
+    </insert>
+
+    <!-- ID로 게임 템플릿 조회 -->
+    <select id="selectGameTemplateById" resultType="com.example.bomul_backend.game.model.Entity.GameTemplate">
+        SELECT *
+        FROM game_template
+        WHERE map_id = #{mapId}
+    </select>
+
+    <!-- 모든 게임 템플릿 조회 -->
+    <select id="selectAllGameTemplates" resultType="com.example.bomul_backend.game.model.Entity.GameTemplate">
+        SELECT *
+        FROM game_template
+    </select>
+
+    <!-- 게임 템플릿 업데이트 -->
+    <update id="updateGameTemplate">
+        UPDATE game_template
+        SET
+            max_participants = #{maxParticipants},
+            announcement_text = #{announcementText},
+            feedback_range = #{feedbackRange},
+            max_feedback_level = #{maxFeedbackLevel},
+            updated_at = NOW()
+        WHERE map_id = #{mapId}
+    </update>
+
+    <!-- 게임 템플릿 삭제 -->
+    <delete id="deleteGameTemplate">
+        DELETE
+        FROM game_template
+        WHERE map_id = #{mapId}
+    </delete>
+
+</mapper>

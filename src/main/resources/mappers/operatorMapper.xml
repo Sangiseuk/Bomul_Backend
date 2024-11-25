@@ -15,16 +15,16 @@
     </insert>
 
     <select id="selectSalt" parameterType="String" resultType="String">
-        SELECT salt
+        SELECT salt.salt
         FROM salt
         JOIN operator ON salt.operator_id=operator.operator_id
-        WHERE salt.operator_id=#{operator_id}
+        WHERE email = #{email}
     </select>
 
     <select id="selectOperator" parameterType="Map" resultType="Operator">
         SELECT operator_id, nickname
         FROM operator
-        WHERE operator_id = #{operator_id} AND password = #{password}
+        WHERE email = #{email} AND password = #{password}
     </select>
 
 </mapper>

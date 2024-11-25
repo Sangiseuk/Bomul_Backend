@@ -1,9 +1,11 @@
 package com.example.bomul_backend.game.model.Entity;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Setter
 @Getter
 public class GameTemplate {
     private int mapId;

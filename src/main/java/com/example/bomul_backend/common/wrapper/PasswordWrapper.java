@@ -17,4 +17,5 @@ public class PasswordWrapper {
         byte[] hashingPassword = CryptoUtils.getSHA256(password, salt);
         return CryptoUtils.byteArrayToHex(hashingPassword);
     }
+
 }

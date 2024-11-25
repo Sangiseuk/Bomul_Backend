@@ -44,8 +44,8 @@ public class OperatorServiceImpl implements OperatorService {
         PasswordWrapper passwordWrapper = new PasswordWrapper();
         passwordWrapper.setSalt(salt);
         passwordWrapper.setPassword(password);
-
         String encryptedPassword = passwordWrapper.encryptPassword();
+        System.out.println(encryptedPassword);
 
         Map<String, String> info = new HashMap<>();
         info.put("email", email);
