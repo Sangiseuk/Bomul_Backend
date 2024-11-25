@@ -12,13 +12,20 @@ import java.util.List;
 @Getter
 @Setter
 public class GameInfo {
+    public enum GameStatus {
+        CREATED, IN_PROGRESS, FINISHED
+    }
+
     private final String hostSessionId;
     private final Scope scope;
     private final int maxParticipants;
     private final String announcementText;
     private final int feedbackRange;
     private final int maxFeedbackLevel;
+    @Builder.Default
+    private GameStatus gameStatus = GameStatus.CREATED;
     private List<Marker> markerList;
+
 
     private Marker getNearestMarker(Position locationData) {
         Marker nearMarker = null;

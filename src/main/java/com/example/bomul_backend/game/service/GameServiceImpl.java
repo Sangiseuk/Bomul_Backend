@@ -1,6 +1,7 @@
 package com.example.bomul_backend.game.service;
 
 import com.example.bomul_backend.common.Position;
+import com.example.bomul_backend.game.component.GameSessionManager;
 import com.example.bomul_backend.game.model.dto.CreateGameDto;
 import com.example.bomul_backend.game.model.dto.CreateGameResponseDto;
 import com.example.bomul_backend.game.model.pojo.GameInfo;
@@ -21,45 +22,36 @@ import java.util.UUID;
 public class GameServiceImpl implements GameService {
     private final HttpSession httpSession;
     private final SimpMessagingTemplate messagingTemplate;
-    Map<String, GameInfo> gameSessionData;
+    private final GameSessionManager gameSessionManager;
 
     @Autowired
-    public GameServiceImpl(HttpSession httpSession, SimpMessagingTemplate messagingTemplate) {
+    public GameServiceImpl(HttpSession httpSession, SimpMessagingTemplate messagingTemplate, GameSessionManager gameSessionManager) {
         this.httpSession = httpSession;
         this.messagingTemplate = messagingTemplate;
+        this.gameSessionManager = gameSessionManager;
     }
 
     @Override
     public ResponseEntity<CreateGameResponseDto> createGame(CreateGameDto createGameDto) {
         try {
-            String genUUID = UUID.randomUUID().toString().substring(0, 6);
-            int genCount = 0;
-            while (!gameSessionData.containsKey(genUUID) || genCount < 20) {
-                genUUID = UUID.randomUUID().toString().substring(0, 6);
-                genCount++;
-            }
-            if(gameSessionData.containsKey(genUUID))
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "UUID Conflict.");
-            else {
-                GameInfo gameInfo = GameInfo.builder()
-                        .hostSessionId(httpSession.getId())
-                        .scope(createGameDto.scope())
-                        .maxParticipants(createGameDto.maxParticipants())
-                        .announcementText(createGameDto.announcementText())
-                        .feedbackRange(createGameDto.feedbackRange())
-                        .maxFeedbackLevel(createGameDto.maxFeedbackLevel())
-                        .markerList(createGameDto.markerList())
-                        .build();
-                gameSessionData.put(genUUID, gameInfo);
-                return new ResponseEntity<>(new CreateGameResponseDto(genUUID), HttpStatus.CREATED);
-            }
+            GameInfo gameInfo = GameInfo.builder()
+                    .hostSessionId(httpSession.getId())
+                    .scope(createGameDto.scope())
+                    .maxParticipants(createGameDto.maxParticipants())
+                    .announcementText(createGameDto.announcementText())
+                    .feedbackRange(createGameDto.feedbackRange())
+                    .maxFeedbackLevel(createGameDto.maxFeedbackLevel())
+                    .markerList(createGameDto.markerList())
+                    .build();
+            String gameCode = gameSessionManager.addGame(gameInfo);
+            return new ResponseEntity<>(new CreateGameResponseDto(gameCode), HttpStatus.CREATED);
         } catch (ResponseStatusException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     private void sendFeedBackLevel(String sessionId, String gameCode, Position locationData) {
-        GameInfo gameInfo = gameSessionData.get(gameCode); // 추후 기능 분리를 고려해 해당 Line 사용
+        GameInfo gameInfo = gameSessionManager.getGame(gameCode); // 추후 기능 분리를 고려해 해당 Line 사용
         if(gameInfo == null)
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         int feedBackLevel = gameInfo.getFeedBackLevel(locationData);
@@ -80,7 +72,7 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public void findMarker(String sessionId, String gameCode, Position locationData) {
-        GameInfo gameInfo = gameSessionData.get(gameCode); // 추후 기능 분리를 고려해 해당 Line 사용
+        GameInfo gameInfo = gameSessionManager.getGame(gameCode); // 추후 기능 분리를 고려해 해당 Line 사용
         if(gameInfo == null)
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
