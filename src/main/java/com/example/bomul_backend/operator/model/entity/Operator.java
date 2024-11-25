@@ -1,4 +1,4 @@
-package com.example.bomul_backend.operator.model.Entity;
+package com.example.bomul_backend.operator.model.entity;
 
 import com.example.bomul_backend.common.wrapper.PasswordWrapper;
 import lombok.Getter;

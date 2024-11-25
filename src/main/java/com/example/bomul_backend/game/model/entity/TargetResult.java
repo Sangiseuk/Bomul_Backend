@@ -1,7 +1,12 @@
-package com.example.bomul_backend.game.model.Entity;
+package com.example.bomul_backend.game.model.entity;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 public class TargetResult {
 	private int resultId;
 	private int gameId;

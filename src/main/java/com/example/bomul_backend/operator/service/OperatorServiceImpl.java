@@ -1,7 +1,7 @@
 package com.example.bomul_backend.operator.service;
 
 import com.example.bomul_backend.common.wrapper.PasswordWrapper;
-import com.example.bomul_backend.operator.model.Dao.OperatorDao;
+import com.example.bomul_backend.operator.model.dao.OperatorDao;
 import com.example.bomul_backend.operator.model.Entity.Operator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

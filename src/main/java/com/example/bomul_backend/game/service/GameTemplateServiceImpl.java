@@ -1,47 +1,84 @@
 package com.example.bomul_backend.game.service;
 
-import com.example.bomul_backend.game.model.Dao.GameTemplateDao;
-import com.example.bomul_backend.game.model.Entity.GameTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.bomul_backend.common.Position;
+import com.example.bomul_backend.game.model.dao.GameTemplateDao;
+import com.example.bomul_backend.game.model.dto.GameTemplateRequest;
+import com.example.bomul_backend.game.model.dto.MarkerRequest;
+import com.example.bomul_backend.game.model.entity.GameTemplate;
+import com.example.bomul_backend.game.model.entity.MarkerTemplate;
+import com.example.bomul_backend.game.model.entity.Scope;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class GameTemplateServiceImpl implements GameTemplateService {
 
     private final GameTemplateDao gameTemplateDao;
 
-    @Autowired
     public GameTemplateServiceImpl(GameTemplateDao gameTemplateDao) {
         this.gameTemplateDao = gameTemplateDao;
     }
 
+    @Transactional
     @Override
-    public void createGameTemplate(GameTemplate gameTemplate) {
+    public int createGameTemplate(GameTemplateRequest request) {
+        // 1. Scope
+        Scope scope = new Scope();
+        scope.setScopeType(Scope.ScopeType.values()[request.getScopeType()]);
+        scope.setCreatedAt(LocalDateTime.now());
+        gameTemplateDao.insertScope(scope);
+
+        // GameTemplete 생성
+        GameTemplate gameTemplate = new GameTemplate();
+        gameTemplate.setOperatorId(request.getHostId());
+        gameTemplate.setScopeId(request.getScopeId());
+        gameTemplate.setMaxParticipants(request.getMaxParticipants());
+        gameTemplate.setAnnouncementText(request.getAnnouncementText());
+        gameTemplate.setFeedbackRange(request.getFeedbackRange());
+        gameTemplate.setMaxFeedbackLevel(request.getMaxFeedbackLevel());
         gameTemplate.setCreatedAt(LocalDateTime.now());
+
+        // GameTemplete 저장
+        int result =  gameTemplateDao.insertGameTemplate(gameTemplate);
+        int mapId = gameTemplate.getMapId();
+        // 마커 리스트 저장
+        if (request.getMarkers() != null) {
+            for (MarkerRequest markerRequest : request.getMarkers()) {
+                MarkerTemplate marker = new MarkerTemplate();
+                marker.setMapId(mapId);
+                marker.setType(MarkerTemplate.MarkerType.values()[markerRequest.getType()]);
+                marker.setPosition(new Position(markerRequest.getLatitude(), markerRequest.getLongitude()));
+                marker.setVisible(markerRequest.isVisible());
+                marker.setViewCount(markerRequest.getViewCount());
+                marker.setContentText(markerRequest.getContentText());
+                marker.setContentImgUrl(markerRequest.getContentImgUrl());
+                marker.setCreatedAt(LocalDateTime.now());
+                marker.setUpdatedAt(LocalDateTime.now());
+
+                gameTemplateDao.insertMarker(marker);
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public int updateGameTemplate(int templateId, GameTemplateRequest request) {
+        GameTemplate gameTemplate = getGameTemplate(templateId);
+        // 업데이트 로직
+        gameTemplate.setMaxParticipants(request.getMaxParticipants());
+        gameTemplate.setAnnouncementText(request.getAnnouncementText());
+        gameTemplate.setFeedbackRange(request.getFeedbackRange());
+        gameTemplate.setMaxFeedbackLevel(request.getMaxFeedbackLevel());
         gameTemplate.setUpdatedAt(LocalDateTime.now());
-        gameTemplateDao.insertGameTemplate(gameTemplate);
+        return gameTemplateDao.updateGameTemplate(gameTemplate);
     }
 
-    @Override
-    public GameTemplate getGameTemplateById(int mapId) {
-        return gameTemplateDao.selectGameTemplateById(mapId);
+    private GameTemplate getGameTemplate(int templateId) {
+        return gameTemplateDao.selectGameTemplateById(templateId);
     }
 
-    @Override
-    public List<GameTemplate> getAllGameTemplates() {
-        return gameTemplateDao.selectAllGameTemplates();
-    }
 
-    @Override
-    public void updateGameTemplate(GameTemplate gameTemplate) {
-        gameTemplateDao.updateGameTemplate(gameTemplate);
-    }
-
-    @Override
-    public void deleteGameTemplate(int mapId) {
-        gameTemplateDao.deleteGameTemplate(mapId);
-    }
 }
