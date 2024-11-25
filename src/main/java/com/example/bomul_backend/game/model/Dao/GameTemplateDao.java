@@ -1,25 +1,18 @@
 package com.example.bomul_backend.game.model.dao;
 
-import com.example.bomul_backend.game.model.entity.GameTemplate;
+import com.example.bomul_backend.game.model.entity.*;
 import org.apache.ibatis.annotations.Mapper;
-
-import java.util.List;
 
 @Mapper
 public interface GameTemplateDao {
 
-    // 게임 템플릿 생성
-    void insertGameTemplate(GameTemplate gameTemplate);
-
-    // ID로 게임 템플릿 조회
+    int insertGameTemplate(GameTemplate gameTemplate);
     GameTemplate selectGameTemplateById(int mapId);
+    int updateGameTemplate(GameTemplate gameTemplate);
 
-    // 모든 게임 템플릿 조회
-    List<GameTemplate> selectAllGameTemplates();
-
-    // 게임 템플릿 업데이트
-    void updateGameTemplate(GameTemplate gameTemplate);
-
-    // 게임 템플릿 삭제
-    void deleteGameTemplate(int mapId);
+    int insertScope(Scope scope);
+    int insertCircleScope(CircleScope circleScope);
+    int insertRectangleScope(RectangleScope rectangleScope);
+    int insertCustomScope(CustomScope customScope);
+    int insertMarker(MarkerTemplate marker);
 }
