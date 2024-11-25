@@ -42,6 +42,8 @@ public class GameTemplateServiceImpl implements GameTemplateService {
                                 request.getCircleScope().getCenterPosition().getLongitude()))
                         .radius(request.getCircleScope().getRadius())
                         .build();
+                gameTemplateDao.insertCircleScope(circleScope);
+                break;
 
             }
             case RECTANGLE -> {

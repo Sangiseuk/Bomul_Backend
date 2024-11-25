@@ -1,5 +1,6 @@
 package com.example.bomul_backend.game.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.time.LocalDateTime;
@@ -12,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @JsonTypeInfo(
 		use = JsonTypeInfo.Id.NAME,
 		include = JsonTypeInfo.As.PROPERTY,
-		property = "type"
+		property = "scopeType"
 )
 @JsonSubTypes({
 		@JsonSubTypes.Type(value = CircleScope.class, name="circle"),
@@ -60,7 +61,13 @@ public class Scope {
 	}
 
     private int scopeId;
+
     private ScopeType scopeType;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+	@JsonProperty("scopeType")
+	public ScopeType getScopeType() {
+		return scopeType;
+	}
 }
