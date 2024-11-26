@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
@@ -29,35 +30,44 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class Scope {
-	public enum ScopeType {
-	    CIRCLE(0),
-	    RECTANGLE(1),
-	    CUSTOM(2);
-		int value;
+	@Getter
+    public enum ScopeType {
+		CIRCLE(0),
+		RECTANGLE(1),
+		CUSTOM(2);
+
+		private final int value;
+
 		ScopeType(int value) {
 			this.value = value;
 		}
 
-		public int getValue() {
-			return value;
+        public static ScopeType fromValue(int value) {
+			return Arrays.stream(ScopeType.values())
+					.filter(type -> type.value == value)
+					.findFirst()
+					.orElseThrow(() -> new IllegalArgumentException("Invalid scope type: " + value));
 		}
 
-		public static ScopeType fromValue(int value){
+		@JsonValue
+		public String toJson(){
+			return this.name();
+		}
+
+
+		@JsonCreator
+		public static ScopeType fromJson(String name) {
+			System.out.println("Received scopeType: " + name); // 디버깅용
+			if (name == null || name.isEmpty()) {
+				throw new IllegalArgumentException("ScopeType cannot be null or empty");
+			}
 			for (ScopeType type : ScopeType.values()) {
-				if(type.getValue() == value){
+				if (type.name().equalsIgnoreCase(name)) {
 					return type;
 				}
 			}
-			throw new IllegalArgumentException("Invalid scope type : " + value);
+			throw new IllegalArgumentException("Invalid ScopeType: " + name);
 		}
-
-		public ScopeType getByIndex(int index) {
-	    	try {
-	    		return ScopeType.values()[index];
-	    	} catch (ArrayIndexOutOfBoundsException e) {
-	    		throw new IllegalArgumentException("Invalid MarkerType Index : " + index);
-	    	}
-	    }
 	}
 
     private int scopeId;

@@ -26,6 +26,9 @@ public class GameTemplateServiceImpl implements GameTemplateService {
     @Override
     public int createGameTemplate(GameTemplateRequest request) {
         // 1. Scope
+        System.out.println(request.getScope().getCreatedAt()); // scope 객체 출력
+        System.out.println(request.getScope().getClass().getName()); // 실제 클래스 확인
+        System.out.println(request.getScope().getScopeType().toJson());
         gameTemplateDao.insertScope(request.getScope());
 
         int scopeId = request.getScope().getScopeId();

@@ -25,6 +25,7 @@ public class GameTemplateController {
 			gameTemplateService.createGameTemplate(gameTemplateRequest);
 			return ResponseEntity.status(HttpStatus.CREATED).body("GameTemplate created successfully.");
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create GameTemplate.");
 		}
 	}

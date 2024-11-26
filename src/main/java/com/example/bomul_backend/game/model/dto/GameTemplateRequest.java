@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 public class GameTemplateRequest {
     private int hostId;
-    private Scope scope; // 원형 스코프
+    private Scope scope;
     private int maxParticipants;
     private String announcementText;
     private int feedbackRange; // 200m, 150m, 등
