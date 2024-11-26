@@ -1,5 +1,6 @@
 package com.example.bomul_backend.common;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +14,7 @@ public class Position {
 		this.latitude = 0.0;
 		this.longitude = 0.0;
 	}
-	
+
 	public Position(Position position) {
 		this.latitude = position.latitude;
 		this.longitude = position.longitude;

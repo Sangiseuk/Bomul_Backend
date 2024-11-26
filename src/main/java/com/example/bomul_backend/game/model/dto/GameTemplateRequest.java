@@ -1,9 +1,6 @@
 package com.example.bomul_backend.game.model.dto;
 
-import com.example.bomul_backend.game.model.entity.CircleScope;
-import com.example.bomul_backend.game.model.entity.CustomScope;
-import com.example.bomul_backend.game.model.entity.RectangleScope;
-import com.example.bomul_backend.game.model.entity.Scope;
+import com.example.bomul_backend.game.model.entity.*;
 import lombok.Getter;
 import lombok.Setter;
 

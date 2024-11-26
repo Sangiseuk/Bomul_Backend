@@ -7,11 +7,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 @RestController
 @RequestMapping("/api/game-template")
 public class GameTemplateController {
 
 	private final GameTemplateService gameTemplateService;
+	Logger logger = Logger.getLogger(GameTemplateController.class.getName());
 
 	@Autowired
 	public GameTemplateController(GameTemplateService gameTemplateService) {
@@ -22,9 +26,11 @@ public class GameTemplateController {
 	@PostMapping("/create")
 	public ResponseEntity<String> createGameTemplate(@RequestBody GameTemplateRequest gameTemplateRequest) {
 		try {
+			logger.log(Level.INFO, gameTemplateRequest.getScope().getScopeType().toString());
 			gameTemplateService.createGameTemplate(gameTemplateRequest);
 			return ResponseEntity.status(HttpStatus.CREATED).body("GameTemplate created successfully.");
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create GameTemplate.");
 		}
 	}

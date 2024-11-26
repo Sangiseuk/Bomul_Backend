@@ -11,11 +11,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 public class GameTemplateServiceImpl implements GameTemplateService {
 
     private final GameTemplateDao gameTemplateDao;
+    Logger logger = Logger.getLogger(GameTemplateServiceImpl.class.getName());
 
     @Autowired
     public GameTemplateServiceImpl(GameTemplateDao gameTemplateDao) {
@@ -26,6 +29,7 @@ public class GameTemplateServiceImpl implements GameTemplateService {
     @Override
     public int createGameTemplate(GameTemplateRequest request) {
         // 1. Scope
+        logger.log(Level.INFO, request.getScope().getScopeType().toString());
         gameTemplateDao.insertScope(request.getScope());
 
         int scopeId = request.getScope().getScopeId();
