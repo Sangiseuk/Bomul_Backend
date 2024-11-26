@@ -18,12 +18,14 @@ public class CircleScope extends Scope {
 	private Position centerPosition;
 	private double radius;
 
-	public CircleScope(int scopeId,
+	public CircleScope(
+			int scopeId,
 	ScopeType scopeType,
 	LocalDateTime createdAt,
 	LocalDateTime updatedAt,
 	Position centerPosition,
-	double radius) {
+	double radius
+	) {
 		super(scopeId, scopeType, createdAt, updatedAt);
 		this.centerPosition = centerPosition;
 		this.radius = radius;
